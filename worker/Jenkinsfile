@@ -33,7 +33,7 @@ pipeline {
     post {
         always {
             echo "Pipeline for worker run is complete.."
-            archiveArtifacts artifacts: '/**/target/*.jar', fingerprint: true
+            archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
 
         }
     }

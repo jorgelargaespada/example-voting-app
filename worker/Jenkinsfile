@@ -13,6 +13,7 @@ pipeline {
 			sh "mvn compile"
             }
             }
+		}
         stage('test') {
             steps {
                 echo 'running tests on worker app'
@@ -25,11 +26,11 @@ pipeline {
                 sleep 9
                 }
             }
-        }
+	}
+	       
     post {
         always {
             echo "Build pipeline for worker run is complete.."
         }
     }
-}
 }

@@ -7,6 +7,9 @@ pipeline {
 
     stages {
         stage('build') {
+	    when {
+	     changeset "**/worker/**"}
+		 
             steps {
                 echo 'compiling worker app'
                 dir('worker'){
@@ -15,22 +18,39 @@ pipeline {
             }
 		}
         stage('test') {
+	    when {
+	     changeset "**/worker/**"}
+		 
             steps {
                 echo 'running tests on worker app'
-                
+		dir ('worker'){
+		    sh "mvn clean test"	}                
                 }
             }
-        stage('package') {
+        stage('package'){
+	    when {
+	     branch 'master'
+	     changeset "**/worker/**"}
+		 
             steps {
                 echo 'packaging app'
-                sleep 9
+                dir ("worker"){
+			sh "mvn package -DskipTests"
+            		archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+			}
                 }
             }
 	}
 	       
     post {
         always {
-            echo "Build pipeline for worker run is complete.."
+            echo "Pipeline for worker run is complete.."
+        }
+        failure {
+		slackSend (channel: "test-jenkins", message: "Build failure - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+        }
+        success {
+		slackSend (channel: "test-jenkins", message: "Build succeeded - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
         }
     }
 }

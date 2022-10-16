@@ -8,7 +8,7 @@ pipeline {
             }
                  
             steps {
-                echo 'Installing npm'
+                echo 'Installing npm for result app'
                 dir('result'){
                         sh "npm install"
                 }
@@ -20,7 +20,7 @@ pipeline {
             }
                  
             steps {
-                echo 'Installing and testing npm'
+                echo 'Installing and testing npm for result app'
                 dir ('result'){
                     sh "npm install && npm test"
                 }

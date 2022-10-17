@@ -1,8 +1,10 @@
 pipeline {
-    agent any
 
-    tools {
-        maven "Maven-3.6.1"
+    agent {
+        docker{
+            image "maven:3.6.1-jdk-8-alpine"
+            args '-v $HOME/.m2:/root/.m2'
+        }
     }
 
     stages {
@@ -49,7 +51,7 @@ pipeline {
         failure {
 		slackSend (channel: "test-jenkins", message: "Build failure - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
         }
-        succeess {
+        success {
 		slackSend (channel: "test-jenkins", message: "Build succeeded - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
         }
     }

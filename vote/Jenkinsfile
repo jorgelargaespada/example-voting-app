@@ -2,32 +2,33 @@ pipeline {
 
     agent {
         docker{
-            image "node:8.16.0-alpine"
+            image "python:2.7.16-slim"
+            args "--user root"
         }
     }
 
     stages {
         stage('build') {
             when {
-             changeset "**/result/**"
+             changeset "**/vote/**"
             }
                  
             steps {
-                echo 'Installing npm for result app'
-                dir('result'){
-                        sh "npm install"
+                echo 'Installing python pip for vote app'
+                dir('vote'){
+                        sh "pip install -r requirements.txt"
                 }
             }
         }
         stage('test') {
             when {
-             changeset "**/result/**"
+             changeset "**/vote/**"
             }
                  
             steps {
-                echo 'Installing and testing npm for result app'
-                dir ('result'){
-                    sh "npm install && npm test"
+                echo 'Installing and testing python pip for vote app'
+                dir ('vote'){
+                    sh "nosetests -v"
                 }
             }
         }
@@ -35,7 +36,7 @@ pipeline {
                
     post {
         always {
-            echo "Pipeline for result node js run is complete.."
+            echo "Pipeline for vote python pip run is complete.."
         }
         failure {
                 slackSend (channel: "test-jenkins", message: "Build failure - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")

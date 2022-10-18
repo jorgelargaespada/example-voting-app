@@ -40,9 +40,10 @@ pipeline {
         agent any
 	    when {
 	     
-	     changeset "**/worker/**"}
-		 branch 'master'
-            steps {
+	     changeset "**/worker/**"
+         branch 'master'
+         }
+		    steps {
                 echo 'packaging worker app with docker'
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin'){

@@ -34,6 +34,7 @@ pipeline {
             steps {
                 echo 'Installing and testing python pip for vote app'
                 dir ('vote'){
+                    sh "pip install -r requirements.txt"
                     sh "nosetests -v"
                 }
             }
